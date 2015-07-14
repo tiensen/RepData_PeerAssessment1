@@ -1,22 +1,16 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 ## Loading and preprocessing the data
 
 
 Unzip activity.zip file and load it into data variable
-```{r}
 
+```r
 # Unzip the zip file
 unzip(zipfile="activity.zip")
 
 # Load the data into the variable
 data <- read.csv("activity.csv")
-
 ```
 
 
@@ -28,8 +22,8 @@ data <- read.csv("activity.csv")
 
 Start by collapsing the data by summing up steps for each day. Then plot the histogram using barplot function.
 
-```{r}
 
+```r
 library(ggplot2)
 
 # Collapsing the data by summing up steps for each day
@@ -37,11 +31,25 @@ totaldailysteps <- tapply(data$steps, data$date, FUN = sum, na.rm = TRUE)
 
 # Plot the histogram using barplot function
 barplot(totaldailysteps, main = "Histogram of total number of steps taken each day", xlab = "Day (Oct ~ Nov 2012)", ylab = "Number of steps")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
 # Calculate the mean & median
 mean(totaldailysteps, na.rm = TRUE)
-median(totaldailysteps, na.rm = TRUE)
+```
 
+```
+## [1] 9354.23
+```
+
+```r
+median(totaldailysteps, na.rm = TRUE)
+```
+
+```
+## [1] 10395
 ```
 
 
@@ -55,7 +63,8 @@ median(totaldailysteps, na.rm = TRUE)
 
 Start by collapsing the data by calculating the mean for each interval. Then plot the time series plot using plot function. Use the which.max function to display the interval having the maximum average steps.
 
-```{r}
+
+```r
 library(ggplot2)
 
 # Collapsing the data by calculating the mean for each interval
@@ -63,10 +72,18 @@ averageintervalsteps <- tapply(data$steps, data$interval, FUN = mean, na.rm = TR
 
 # Plot the time series plot using plot function
 plot(averageintervalsteps, type = "l", main = "Average number of steps in each interval", xlab = "Interval", ylab = "Average number of steps")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 # Display the interval having the maximum average steps
 averageintervalsteps[which.max(averageintervalsteps)]
+```
 
+```
+##      835 
+## 206.1698
 ```
 
 
@@ -83,12 +100,18 @@ averageintervalsteps[which.max(averageintervalsteps)]
 
 Starty by identifying & displaying the number of missing values in the dataset. Then replicating average steps for each interval for the entire duration in the dataset (61 days). The missing values is then replaced with average steps for the corresponding interval. A new dataframe is created after the replacement of missing value is filled. A histogram is then plotted using barplot function based on the filled dataset.
 
-```{r}
 
+```r
 # Identify & display number of missing values in the dataset
 novalue <- is.na(data$steps)
 sum(novalue)
+```
 
+```
+## [1] 2304
+```
+
+```r
 # Replicating average steps for each interval for the entire duration in the dataset (61 days)
 averageintervalstepscolumn <- rep(averageintervalsteps, 61)
 
@@ -105,11 +128,25 @@ filledtotaldailysteps <- tapply(newdata$steps, newdata$date, FUN = sum, na.rm = 
 
 # Plot the histogram using barplot function
 barplot(filledtotaldailysteps, main = "Histogram of total number of steps taken each day (Filled)",xlab = "Day (Oct ~ Nov 2012)", ylab = "Number of steps")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
 # Calculate the mean & median
 mean(filledtotaldailysteps, na.rm = TRUE)
-median(filledtotaldailysteps, na.rm = TRUE)
+```
 
+```
+## [1] 10766.19
+```
+
+```r
+median(filledtotaldailysteps, na.rm = TRUE)
+```
+
+```
+## [1] 10766.19
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -118,8 +155,8 @@ median(filledtotaldailysteps, na.rm = TRUE)
 
 ###2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 
-```{r}
 
+```r
 dayclassification <- function(date) {
     if((weekdays(date) == "Saturday") | (weekdays(date) == "Sunday"))
       return ("Weekend")
@@ -140,5 +177,6 @@ par(mfrow = c(2,1), mar = rep(2,4))
 plot(weekdayaverageintervalsteps, type = "l", main = "Average number of steps in each interval (Weekday)", xlab = "Interval", ylab = "Average number of steps")
 
 plot(weekendaverageintervalsteps, type = "l", main = "Average number of steps in each interval (Weekend)", xlab = "Interval", ylab = "Average number of steps")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
